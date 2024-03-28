@@ -6,6 +6,8 @@ from keras.layers import Dense
 from keras.layers import Input
 from keras.models import Sequential, load_model
 
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
@@ -36,17 +38,18 @@ def create_MLP(input_train, output_train, window_size, num_layers = 1):
     return model
 
 # Create a PRM model
-'''def create_PRM(samples, input_train, degree):
+def create_PRM(samples_x, samples_y, degree):
     
-    print(samples)
-    print("new")
-    print(input_train)
-    polynomial_coefficients = numpy.polyfit(samples, input_train, degree) 
-    print(polynomial_coefficients)
-    model = numpy.polynomial.polynomial.Polynomial(polynomial_coefficients)
+    # Generate polynomial features
+    poly_features = PolynomialFeatures(degree=degree)
+    X_poly = poly_features.fit_transform(samples_x.reshape(-1, 1))
 
-    return model
-'''
+    # Create and fit the polynomial regression model
+    model = LinearRegression()
+    model.fit(X_poly, samples_y)
+
+    return [model, X_poly]
+
 def generate_sine_wave(freq, amplitude, duration, sampling_rate, noise_level):
     """
     Generate a sine wave.
@@ -87,7 +90,7 @@ def compare_waves(wave_expected, wave_actual, title = "Comparison", legend1 = No
     # Add labels, legend, and title
     plt.xlabel('Sample')
     plt.ylabel('Amplitude')
-    plt.title('Overlaying Plots')
+    plt.title(title)
     plt.legend()
     plt.grid(True)
     plt.show()
@@ -102,11 +105,11 @@ sampling_rate = 1000  # Hz
 noise_level = 0.5   # noise
 
 # MLP Parameters
-window_size = 20  # Number of past samples to predict next sample
+window_size = 1  # Number of past samples to predict next sample
 num_hidden_layers = 3   # Number of hidden layers in the MLP model
 
 # PRM Parameters
-poly_degree = 3 # Polynomial Equation Degree
+poly_degree = 8 # Polynomial Equation Degree
 
 # Generate sine wave
 [sine_wave, time] = generate_sine_wave(frequency, amplitude, duration, sampling_rate, noise_level)
@@ -136,25 +139,25 @@ sine_model_mlp = create_MLP(input_train, output_train, window_size, num_hidden_l
 output_predict_actual_mlp = sine_model_mlp.predict(input_predict)
 
 # Create PRM model
-#sine_model_prm = create_PRM(time[:split_index], input_train, poly_degree) 
+sine_model_prm = create_PRM(time[split_index + 1:], input_predict, poly_degree) 
 
 # Predict output values
-#output_predict_actual_prm = sine_model_prm(input_predict)
+output_predict_actual_prm = sine_model_prm[0].predict(sine_model_prm[1])
 
 print("MLP")
 print('R2 = ', r2_score(output_predict_actual_mlp, output_predict_expected))
 print('MAE = ', mean_absolute_error(output_predict_actual_mlp, output_predict_expected))
 print('MSE = ', mean_squared_error(output_predict_actual_mlp, output_predict_expected))
 
-'''
+
 print("PRM")
 print('R2 = ', r2_score(output_predict_actual_prm, output_predict_expected))
 print('MAE = ', mean_absolute_error(output_predict_actual_prm, output_predict_expected))
 print('MSE = ', mean_squared_error(output_predict_actual_prm, output_predict_expected))
-'''
+
 
 # Plot sine waves
 plot_wave(sine_wave, title = "original sine wave").show()
 compare_waves(output_predict_expected, output_predict_actual_mlp, "MLP", "Expected", "Actual")
-#compare_waves(output_predict_expected, output_predict_actual_prm, "PRM", "Expected", "Actual")
+compare_waves(output_predict_expected, output_predict_actual_prm, "PRM", "Expected", "Actual")
 
