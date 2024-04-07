@@ -73,3 +73,44 @@ for i = 1:length(frequencies)
     xlabel('Time (s)');
     ylabel('Frequency (Hz)');
 end
+
+%Task4
+% Define the time vector for the one-second series
+t_one_second = linspace(0, 1, sampling_rate);
+
+% Extract the first one-second series (frequency 10Hz) and second one-second series (frequency 20Hz)
+one_second_series_10Hz = sin(2 * pi * 10 * t_one_second);
+one_second_series_20Hz = sin(2 * pi * 20 * t_one_second);
+
+% Calculate ACF and PACF for both series
+lags = 50;
+[acf_10Hz, lag_10Hz] = autocorr(one_second_series_10Hz, lags);
+[pacf_10Hz, lag_pacf_10Hz] = parcorr(one_second_series_10Hz, lags);
+[acf_20Hz, lag_20Hz] = autocorr(one_second_series_20Hz, lags);
+[pacf_20Hz, lag_pacf_20Hz] = parcorr(one_second_series_20Hz, lags);
+
+% Plot ACF and PACF for both series
+figure;
+subplot(2, 2, 1);
+stem(lag_10Hz, acf_10Hz, 'filled');
+title('ACF of 10 Hz Series');
+xlabel('Lag');
+ylabel('Autocorrelation');
+
+subplot(2, 2, 2);
+stem(lag_pacf_10Hz, pacf_10Hz, 'filled');
+title('PACF of 10 Hz Series');
+xlabel('Lag');
+ylabel('Partial Autocorrelation');
+
+subplot(2, 2, 3);
+stem(lag_20Hz, acf_20Hz, 'filled');
+title('ACF of 20 Hz Series');
+xlabel('Lag');
+ylabel('Autocorrelation');
+
+subplot(2, 2, 4);
+stem(lag_pacf_20Hz, pacf_20Hz, 'filled');
+title('PACF of 20 Hz Series');
+xlabel('Lag');
+ylabel('Partial Autocorrelation');
