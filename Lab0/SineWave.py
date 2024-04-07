@@ -1,5 +1,6 @@
 import numpy
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 
 from tensorflow import keras
 from keras.layers import Dense
@@ -11,6 +12,18 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 from sklearn.metrics import r2_score
 from sklearn.metrics import mean_squared_error
+
+import pandas as pd
+
+# define a ARIMA model for forecasting
+def create_ARIMA(input, p, d, q):
+
+    model = sm.tsa.ARIMA(input, order=(p,d,q))  # ARIMA(p,d,q) with p=3 (autoregressive order), d=0 (no differencing), q=0 (moving average order)
+    model_fit = model.fit()
+
+    print(model_fit.summary())
+
+    return model_fit
 
 # define an MLP model to be trained on the 80% dataset of the sine wave
 def create_MLP(input_train, output_train, window_size, num_layers = 1):
@@ -107,9 +120,16 @@ noise_level = 0.5   # noise
 # MLP Parameters
 window_size = 1  # Number of past samples to predict next sample
 num_hidden_layers = 3   # Number of hidden layers in the MLP model
+training_percent = 0.8    # 80% of data is for training
 
 # PRM Parameters
-poly_degree = 8 # Polynomial Equation Degree
+poly_degree = 1000 # Polynomial Equation Degree
+
+# ARIMA Parameters
+steps_forecast = round((1-training_percent) * duration * sampling_rate) # Steps to forecast
+autoreg_order = 20
+diff_order = 0
+mav_order = 1
 
 # Generate sine wave
 [sine_wave, time] = generate_sine_wave(frequency, amplitude, duration, sampling_rate, noise_level)
@@ -124,7 +144,7 @@ input_seq = numpy.array(input_seq)
 output_seq = numpy.array(output_seq)
 
 # Split data into 80% for training, 20% for predication
-split_index = round(len(input_seq)*0.8)
+split_index = round(len(input_seq)*training_percent)
 # training data
 input_train = input_seq[:split_index]
 output_train = output_seq[:split_index]
@@ -144,6 +164,12 @@ sine_model_prm = create_PRM(time[split_index + 1:], input_predict, poly_degree)
 # Predict output values
 output_predict_actual_prm = sine_model_prm[0].predict(sine_model_prm[1])
 
+# Create Arima Model
+sine_model_arima = create_ARIMA(input_train, autoreg_order, diff_order, mav_order)
+
+# Predict output values
+output_predict_actual_arima = sine_model_arima.forecast(steps=steps_forecast)
+
 print("MLP")
 print('R2 = ', r2_score(output_predict_actual_mlp, output_predict_expected))
 print('MAE = ', mean_absolute_error(output_predict_actual_mlp, output_predict_expected))
@@ -155,9 +181,16 @@ print('R2 = ', r2_score(output_predict_actual_prm, output_predict_expected))
 print('MAE = ', mean_absolute_error(output_predict_actual_prm, output_predict_expected))
 print('MSE = ', mean_squared_error(output_predict_actual_prm, output_predict_expected))
 
+print("ARIMA")
+print('R2 = ', r2_score(output_predict_actual_arima, output_predict_expected))
+print('MAE = ', mean_absolute_error(output_predict_actual_arima, output_predict_expected))
+print('MSE = ', mean_squared_error(output_predict_actual_arima, output_predict_expected))
 
 # Plot sine waves
 plot_wave(sine_wave, title = "original sine wave").show()
 compare_waves(output_predict_expected, output_predict_actual_mlp, "MLP", "Expected", "Actual")
 compare_waves(output_predict_expected, output_predict_actual_prm, "PRM", "Expected", "Actual")
-
+compare_waves(output_predict_expected, output_predict_actual_arima, "ARIMA", "Expected", "Actual")
+plot_wave(sine_model_arima.resid, title = "Residuals of ARIMA Model").show()
+pd.DataFrame(sine_model_arima.resid).plot(kind='density', title="Residuals Density Plot")
+plt.show()
