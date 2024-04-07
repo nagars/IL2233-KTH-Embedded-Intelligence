@@ -52,23 +52,36 @@ legend('10 Hz', '20 Hz', '30 Hz', '40 Hz', '50 Hz');
 % Calculate power spectrum
 nfft = 2^nextpow2(length(t)); % Next power of 2 from length of y
 Y = fft(signals, nfft) / length(t);
-frequencies1 = sampling_rate / 2 * linspace(0, 1, nfft / 2 + 1);
+frequencies = sampling_rate / 2 * linspace(0, 1, nfft / 2 + 1);
 
 % Plot power spectrum
 figure;
-plot(frequencies1, 2 * abs(Y(1:nfft / 2 + 1, :)));
+plot(frequencies, 2 * abs(Y(1:nfft / 2 + 1, :)));
 title('Power Spectrum (Power Density)');
 xlabel('Frequency (Hz)');
 ylabel('Power');
 legend('10 Hz', '20 Hz', '30 Hz', '40 Hz', '50 Hz');
 
 %Task3
+% Calculate spectrogram
+%window_size = 512;
+%overlap = round(0.5 * window_size);
+%nfft_spec = max(256, 2^nextpow2(window_size));
+%[s, f, t_spec] = spectrogram(signals, window_size, overlap, nfft_spec, sampling_rate);
+%[s, f, t_spec] = spectrogram(signals(:,1))
+
+% Plot spectrogram
+%figure;
+%imagesc(t_spec, f, 10*log10(abs(s)));
+%colorbar;
+%title('Spectrogram');
+%xlabel('Time (s)');
+%ylabel('Frequency (Hz)');
+
 figure;
-for i = 1:length(frequencies)
+for i = 1:length(signals)
     subplot(length(frequencies), 1, i);
-    % Calculate spectrogram
     [s, f, t_spec] = spectrogram(signals(:,i))
-    imagesc(t_spec, f, 10*log10(abs(s)));
     title(['Spectrogram of Signal ', num2str(i), ', f = ', num2str(frequencies(i)), ' Hz']);
     xlabel('Time (s)');
     ylabel('Frequency (Hz)');
