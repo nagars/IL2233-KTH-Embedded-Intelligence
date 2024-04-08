@@ -37,7 +37,7 @@ def generate_sine_wave(freq, amplitude, duration, sampling_rate, noise_level):
     sine_wave = amplitude * numpy.sin(2 * numpy.pi * freq * time) + noise
     return sine_wave
 
-def make_wave_plot(plt, wave, title = "Sine Wave", colour = None):
+def plot_wave(plt, wave, title = "Sine Wave", colour = None):
     plt.plot(wave.wave, label=wave.name, color=colour)
     plt.title(title)
     plt.xlabel('Sample')
@@ -46,23 +46,33 @@ def make_wave_plot(plt, wave, title = "Sine Wave", colour = None):
 
     return plt
 
-def generate_power_pectrum(wave, sampling_rate):
+def plot_power_spectrum(waves, sampling_rate):
+
+    pwr_spec0 = power_spectrum(generate_power_spectrum(wave0, sampling_rate), "10 Hz")
+    pwr_spec1 = power_spectrum(generate_power_spectrum(wave1, sampling_rate), "20 Hz")
+    pwr_spec2 = power_spectrum(generate_power_spectrum(wave2, sampling_rate), "30 Hz")
+    pwr_spec3 = power_spectrum(generate_power_spectrum(wave3, sampling_rate), "40 Hz")
+    pwr_spec4 = power_spectrum(generate_power_spectrum(wave4, sampling_rate), "50 Hz")
+    pwr_specs = [pwr_spec0, pwr_spec1, pwr_spec2, pwr_spec3, pwr_spec4]
+
+    for i in pwr_specs:
+        plt.plot(i.freq, i.spectrum, label=i.name)
+    
+    plt.title("Power Spectrum")
+    plt.xlabel('Frequency')
+    plt.ylabel('Power')
+    plt.grid(True)
+    plt.legend(loc='upper right')
+    plt.xlim(0, sampling_rate / 2) 
+    plt.show()
+
+def generate_power_spectrum(wave, sampling_rate):
     # Perform FFT to calculate power spectrum
     fft_result = numpy.fft.fft(wave.wave)
     freq = numpy.fft.fftfreq(len(wave.wave), 1 / sampling_rate)
     power_spectrum = numpy.abs(fft_result) ** 2
 
     return [power_spectrum, freq]
-
-def make_power_spectrum_plot(plt, pwr_spec, title = "Power Spectrum", colour = None):
-    plt.plot(pwr_spec.freq, pwr_spec.spectrum, label=pwr_spec.name, color=colour)
-    plt.title(title)
-    plt.xlabel('Frequency')
-    plt.ylabel('Power')
-    plt.grid(True)
-    plt.legend(loc='upper right')
-
-    return plt
 
 def plot_spectrogram(waves):
     # Spectrogram
@@ -81,6 +91,36 @@ def plot_spectrogram(waves):
 
     return plt
 
+def plot_ACF(waves):
+    # Compute ACF
+    lag_max = 50
+    acf_values_10Hz = acf(waves[0].wave, nlags=lag_max, fft=True)
+    acf_values_20Hz = acf(waves[1].wave, nlags=lag_max, fft=True)
+
+    # Plot ACF
+    plot3 = plt
+    plot3.stem(numpy.arange(0, lag_max+1), acf_values_10Hz)
+    plot3.stem(numpy.arange(0, lag_max+1), acf_values_20Hz)
+    plot3.title('Autocorrelation Function (ACF) of Sine Wave')
+    plot3.xlabel('Lag')
+    plot3.ylabel('Autocorrelation')
+    plot3.grid(True)
+    plot3.show()
+
+def plot_PACF(waves):
+    lag_max = 50
+    pacf_values_10Hz = pacf(waves[0].wave, nlags=lag_max)
+    pacf_values_20Hz = pacf(waves[1].wave, nlags=lag_max)
+
+    # Plot PACF
+    plot3 = plt
+    plot3.stem(numpy.arange(0, lag_max+1), pacf_values_10Hz)
+    plot3.stem(numpy.arange(0, lag_max+1), pacf_values_20Hz)
+    plot3.title('Partial Autocorrelation Function (PACF) of Sine Wave')
+    plot3.xlabel('Lag')
+    plot3.ylabel('Partial Autocorrelation')
+    plot3.grid(True)
+    plot3.show()
 
 # Sine wave Parameters
 frequency = [10, 20, 30, 40, 50]  # Hz
@@ -100,52 +140,18 @@ waves = [wave0, wave1, wave2, wave3, wave4]
 # Line Plots
 plot = plt
 for i in waves:
-    make_wave_plot(plot, i)
+    plot_wave(plot, i)
 plot.legend(loc='upper right')
 plot.show()
 
 # Power Spectrum
-pwr_spec0 = power_spectrum(generate_power_pectrum(wave0, sampling_rate), "10 Hz")
-pwr_spec1 = power_spectrum(generate_power_pectrum(wave1, sampling_rate), "20 Hz")
-pwr_spec2 = power_spectrum(generate_power_pectrum(wave2, sampling_rate), "30 Hz")
-pwr_spec3 = power_spectrum(generate_power_pectrum(wave3, sampling_rate), "40 Hz")
-pwr_spec4 = power_spectrum(generate_power_pectrum(wave4, sampling_rate), "50 Hz")
-pwr_specs = [pwr_spec0, pwr_spec1, pwr_spec2, pwr_spec3, pwr_spec4]
-
-plot1 = plt
-for i in pwr_specs:
-    make_power_spectrum_plot(plot1, i)
-plot1.xlim(0, sampling_rate / 2) 
-plot1.show()
+plot_power_spectrum(waves, sampling_rate)
 
 # Spectrogram
-plot2 = plot_spectrogram(waves)
+plot_spectrogram(waves)
 
 # ACF
-# Compute ACF
-lag_max = 50
-acf_values_10Hz = acf(waves[0].wave, nlags=lag_max, fft=True)
-acf_values_20Hz = acf(waves[1].wave, nlags=lag_max, fft=True)
-
-# Plot ACF
-plot3 = plt
-plot3.stem(numpy.arange(0, lag_max+1), acf_values_10Hz)
-plot3.stem(numpy.arange(0, lag_max+1), acf_values_20Hz)
-plot3.title('Autocorrelation Function (ACF) of Sine Wave')
-plot3.xlabel('Lag')
-plot3.ylabel('Autocorrelation')
-plot3.grid(True)
-plot3.show()
+plot_ACF(waves)
 
 # PACF
-pacf_values_10Hz = pacf(waves[0].wave, nlags=lag_max)
-pacf_values_20Hz = pacf(waves[1].wave, nlags=lag_max)
-
-# Plot PACF
-plt.stem(numpy.arange(0, lag_max+1), pacf_values_10Hz)
-plt.stem(numpy.arange(0, lag_max+1), pacf_values_20Hz)
-plt.title('Partial Autocorrelation Function (PACF) of Sine Wave')
-plt.xlabel('Lag')
-plt.ylabel('Partial Autocorrelation')
-plt.grid(True)
-plt.show()
+plot_PACF(waves)
