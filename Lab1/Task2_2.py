@@ -32,12 +32,12 @@ def plot_ERP(wave, title):
     plt.show()
 
 def plot_EEG_visual(wave, title):
-    plt.imshow(EEGa,                                   # Image the data from condition A.
-           cmap='BuPu',                            # ... set the colormap (optional)
-           extent=[t[0], t[-1], 1, len(wave)],       # ... set axis limits (t[-1] represents the last element of t)
-           aspect='auto',                          # ... set aspect ratio 
-           origin='lower')                         # ... put origin in lower left corner
-    plt.xlabel('Time[s]')                              # Label the axes
+    plt.imshow(EEGa,                                    # Image the data from condition A.
+           cmap='BuPu',                                 # ... set the colormap (optional)
+           extent=[t[0], t[-1], 1, len(wave)],          # ... set axis limits (t[-1] represents the last element of t)
+           aspect='auto',                               # ... set aspect ratio 
+           origin='lower')                              # ... put origin in lower left corner
+    plt.xlabel('Time[s]')                               # Label the axes
     plt.ylabel('Trial #')
     plt.title(title) 
     plt.colorbar()                                     # Show voltage to color mapping
@@ -49,12 +49,12 @@ def plot_psd(wave, sampling_rate, xlim, title = 'Power Spectrum Density (PSD)'):
     
     fft_result = numpy.fft.rfft(wave.mean(0))
     freqs = numpy.fft.rfftfreq(len(wave.mean(0)), 1/sampling_rate)
-    psd = numpy.abs(fft_result)**2
+    psd = numpy.abs(fft_result)**2 / len(wave)
 
     plt.xlim(0, xlim)
     plt.plot(freqs, psd)
     plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Power')
+    plt.ylabel('Power [$\mu V^2$/Hz]')
     plt.title(title)
     plt.grid(True)
     plt.show()

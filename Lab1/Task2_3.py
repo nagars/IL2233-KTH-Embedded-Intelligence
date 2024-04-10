@@ -23,33 +23,33 @@ from statsmodels.tsa.stattools import acovf
 
 def plot(series, lags):
     plt.figure()
-    series.plot.line(title='EEGa - Line plot')
+    series.plot.line(title = 'EEG - Line plot')
     plt.figure()
-    series.plot.hist(title = 'EEGa - Histogram')
+    series.plot.hist(title = 'EEG - Histogram')
     # density plot
     plt.figure()
-    series.plot.density(title = "EEGa - Density plot")
+    series.plot.density(title = "EEG - Density plot")
     # box plot
     plt.figure()
-    series.plot.box(title = 'EEGa - Box plot')
+    series.plot.box(title = 'EEG - Box plot')
     # lag-1 plot
     plt.figure()
     import pandas as pd
     pd.plotting.lag_plot(series, lag=1)
     # acf graph
-    plot_acf(series, lags=lags, title="EEGa = ACF plot")
+    plot_acf(series, lags=lags, title="EEG - ACF plot")
     plt.show()
-    plot_pacf(series, lags=lags, title="EEGa - PACF plot")
+    plot_pacf(series, lags=lags, title="EEG - PACF plot")
     plt.show()
 
 def plot_autocovariance(wave, lag=50):
 
     auto_cov = Series(acovf(wave, nlag = lag))
     auto_cov.index = wave.index[0:101]
-    auto_cov.plot.line(title = "EEGa - Auto-covariance plot")
+    auto_cov.plot.line(title = "EEG - Auto-covariance plot")
     plt.show()
 
-def plot_power_spectrum_linear(wave, sampling_rate, title = "EEGa - Power Spectrum Linear Scale"):
+def plot_power_spectrum_linear(wave, sampling_rate, title = "EEG - Power Spectrum Linear Scale"):
     
     fft_result = numpy.fft.rfft(wave)
     freqs = numpy.fft.rfftfreq(len(wave), 1/sampling_rate)
@@ -58,13 +58,13 @@ def plot_power_spectrum_linear(wave, sampling_rate, title = "EEGa - Power Spectr
     plt.xlim(0, 100)
     plt.plot(freqs, psd)
     plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Power')
+    plt.ylabel('Power [$\mu V^2$/Hz]')
     plt.title(title)
     plt.grid(True)
     plt.show()
 
 
-def plot_power_spectrum_db(wave, sampling_rate, title = "EEGa - Power Spectrum Log Scale"):
+def plot_power_spectrum_db(wave, sampling_rate, title = "EEG - Power Spectrum Log Scale"):
     
     fft_result = numpy.fft.rfft(wave)
     freqs = numpy.fft.rfftfreq(len(wave), 1/sampling_rate)
@@ -74,7 +74,7 @@ def plot_power_spectrum_db(wave, sampling_rate, title = "EEGa - Power Spectrum L
     #plt.xlim(0, 100)
     plt.ylim(-30,61)
     plt.xlabel('Frequency (Hz)')
-    plt.ylabel('Power (dB)')
+    plt.ylabel('Power [dB]')
     plt.title(title)
     plt.grid(True)
     plt.show()

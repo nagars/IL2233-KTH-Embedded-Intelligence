@@ -15,8 +15,6 @@ import numpy
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
 import array
-from statsmodels.tsa.stattools import acf
-from statsmodels.tsa.stattools import pacf
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
 
@@ -48,7 +46,7 @@ def plot_wave(plt, wave, title = "Sine Wave", colour = None):
 
     return plt
 
-def plot_power_spectrum(waves, sampling_rate):
+def plot_power_spectrum_density(waves, sampling_rate):
 
     pwr_spec0 = power_spectrum(generate_power_spectrum(waves[0], sampling_rate), "10 Hz")
     pwr_spec1 = power_spectrum(generate_power_spectrum(waves[1], sampling_rate), "20 Hz")
@@ -58,33 +56,29 @@ def plot_power_spectrum(waves, sampling_rate):
     pwr_specs = [pwr_spec0, pwr_spec1, pwr_spec2, pwr_spec3, pwr_spec4]
 
     for i in pwr_specs:
-        plt.plot(i.freq, i.spectrum, label=i.name)
+        plt.plot(i.freq, i.spectrum/len(i.spectrum), label=i.name)
     
     plt.title("Power Spectrum")
-    plt.xlabel('Frequency')
-    plt.ylabel('Power')
+    plt.xlabel('Frequency [Hz]')
+    plt.ylabel('Power [$\mu V^2$/Hz]')
     plt.grid(True)
     plt.legend(loc='upper right')
     plt.xlim(0, sampling_rate / 2) 
     plt.show()
 
 def generate_power_spectrum(wave, sampling_rate):
-    # Perform FFT to calculate power spectrum
-    fft_result = numpy.fft.rfft(wave.wave)
+    # Perform FFT to calculate power spectrum (Keep only real values)
+    fft_result = numpy.fft.rfft(wave.wave - wave.wave.mean(0))
     freq = numpy.fft.rfftfreq(len(wave.wave), 1 / sampling_rate)
     power_spectrum = numpy.abs(fft_result) ** 2
 
     return [power_spectrum, freq]
 
 def plot_spectrogram(waves, sampling_rate):
-    # Spectrogram
-    #index = 0
+    # Combine into 1 wave for serial spectrogram
     wave_combined = array.array('f')
     for i in waves:
-        #wave_combined.extend(i.wave[index*40:(index+1)*40])
-        #index += 1
         wave_combined.extend(i.wave)
-
 
     plt.specgram(wave_combined, Fs=sampling_rate, NFFT=64, noverlap=32)
     plt.title('Spectrogram of Sine Wave')
@@ -95,59 +89,19 @@ def plot_spectrogram(waves, sampling_rate):
 
     return plt
 
-def plot_ACF(waves):
-    # Compute ACF
-    lag_max = 50
+def plot_ACF(waves, lag = 50):
 
-    plot_acf(waves[0].wave, lags=lag_max, title='10Hz Autocorrelation')
+    plot_acf(waves[0].wave, lags=lag, title='10Hz Autocorrelation')
     plt.show()
-    plot_acf(waves[1].wave, lags=lag_max, title='20Hz Autocorrelation')
+    plot_acf(waves[1].wave, lags=lag, title='20Hz Autocorrelation')
     plt.show()
 
-'''
-    acf_values_10Hz = acf(waves[0].wave, nlags=lag_max, fft=True)
-    acf_values_20Hz = acf(waves[1].wave, nlags=lag_max, fft=True)
+def plot_PACF(waves, lag = 50):
 
-
-    # Plot ACF
-    plot3 = plt
-    plot3.stem(numpy.arange(0, lag_max+1), acf_values_10Hz)
-    plot3.stem(numpy.arange(0, lag_max+1), acf_values_20Hz)
-    plot3.title('Autocorrelation Function (ACF) of Sine Wave')
-    plot3.xlabel('Lag')
-    plot3.ylabel('Autocorrelation')
-    plot3.grid(True)
-    plot3.show()
-    '''
-
-def plot_PACF(waves):
-    lag_max = 50
-
-    #wave_10Hz = waves[0:200]
-    #wave_20Hz = waves[200:400]
-
-    plot_pacf(waves[0].wave, lags=lag_max, title='10Hz Partial Autocorrelation')
+    plot_pacf(waves[0].wave, lags=lag, title='10Hz Partial Autocorrelation')
     plt.show()
-    plot_pacf(waves[1].wave, lags=lag_max, title='20 Hz Partial Autocorrelation')
+    plot_pacf(waves[1].wave, lags=lag, title='20 Hz Partial Autocorrelation')
     plt.show()
-
-'''
-    pacf_values_10Hz = pacf(waves[0].wave, nlags=lag_max)
-    pacf_values_20Hz = pacf(waves[1].wave, nlags=lag_max)
-
-
-
-    # Plot PACF
-    plot3 = plt
-    plot3.stem(numpy.arange(0, lag_max+1), pacf_values_10Hz)
-    plot3.stem(numpy.arange(0, lag_max+1), pacf_values_20Hz)
-    plot3.title('Partial Autocorrelation Function (PACF) of Sine Wave')
-    plot3.xlabel('Lag')
-    plot3.ylabel('Partial Autocorrelation')
-    plot3.grid(True)
-    plot3.show()
-
-    '''
 
 
 # Sine wave Parameters
@@ -173,7 +127,7 @@ plot.legend(loc='upper right')
 plot.show()
 
 # Power Spectrum
-plot_power_spectrum(waves, sampling_rate)
+plot_power_spectrum_density(waves, sampling_rate)
 
 # Spectrogram
 plot_spectrogram(waves, sampling_rate)
