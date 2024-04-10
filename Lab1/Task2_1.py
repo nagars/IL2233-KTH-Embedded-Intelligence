@@ -70,8 +70,8 @@ def plot_power_spectrum(waves, sampling_rate):
 
 def generate_power_spectrum(wave, sampling_rate):
     # Perform FFT to calculate power spectrum
-    fft_result = numpy.fft.fft(wave.wave)
-    freq = numpy.fft.fftfreq(len(wave.wave), 1 / sampling_rate)
+    fft_result = numpy.fft.rfft(wave.wave)
+    freq = numpy.fft.rfftfreq(len(wave.wave), 1 / sampling_rate)
     power_spectrum = numpy.abs(fft_result) ** 2
 
     return [power_spectrum, freq]
@@ -98,9 +98,6 @@ def plot_spectrogram(waves, sampling_rate):
 def plot_ACF(waves):
     # Compute ACF
     lag_max = 50
-
-    #wave_10Hz = waves[0:200]
-    #wave_20Hz = waves[200:400]
 
     plot_acf(waves[0].wave, lags=lag_max, title='10Hz Autocorrelation')
     plt.show()
@@ -153,40 +150,39 @@ def plot_PACF(waves):
     '''
 
 
-def Main():
-    # Sine wave Parameters
-    frequency = [10, 20, 30, 40, 50]  # Hz
-    amplitude = 1.0
-    duration = 1.0  # seconds
-    sampling_rate = 200  # Hz
-    noise = 0
+# Sine wave Parameters
+frequency = [10, 20, 30, 40, 50]  # Hz
+amplitude = 1.0
+duration = 1.0  # seconds
+sampling_rate = 200  # Hz
+noise = 0
 
-    # Generate sine wave
-    wave0 = sine_wave(generate_sine_wave(frequency[0], amplitude, duration, sampling_rate, noise), "10 Hz")
-    wave1 = sine_wave(generate_sine_wave(frequency[1], amplitude, duration, sampling_rate, noise), "20 Hz")
-    wave2 = sine_wave(generate_sine_wave(frequency[2], amplitude, duration, sampling_rate, noise), "30 Hz")
-    wave3 = sine_wave(generate_sine_wave(frequency[3], amplitude, duration, sampling_rate, noise), "40 Hz")
-    wave4 = sine_wave(generate_sine_wave(frequency[4], amplitude, duration, sampling_rate, noise), "50 Hz")
-    waves = [wave0, wave1, wave2, wave3, wave4]
+# Generate sine wave
+wave0 = sine_wave(generate_sine_wave(frequency[0], amplitude, duration, sampling_rate, noise), "10 Hz")
+wave1 = sine_wave(generate_sine_wave(frequency[1], amplitude, duration, sampling_rate, noise), "20 Hz")
+wave2 = sine_wave(generate_sine_wave(frequency[2], amplitude, duration, sampling_rate, noise), "30 Hz")
+wave3 = sine_wave(generate_sine_wave(frequency[3], amplitude, duration, sampling_rate, noise), "40 Hz")
+wave4 = sine_wave(generate_sine_wave(frequency[4], amplitude, duration, sampling_rate, noise), "50 Hz")
+waves = [wave0, wave1, wave2, wave3, wave4]
 
-    # Line Plots
-    plot = plt
-    for i in waves:
-        plot_wave(plot, i)
-    plot.legend(loc='upper right')
-    plot.show()
+# Line Plots
+plot = plt
+for i in waves:
+    plot_wave(plot, i)
+plot.legend(loc='upper right')
+plot.show()
 
-    # Power Spectrum
-    plot_power_spectrum(waves, sampling_rate)
+# Power Spectrum
+plot_power_spectrum(waves, sampling_rate)
 
-    # Spectrogram
-    plot_spectrogram(waves, sampling_rate)
+# Spectrogram
+plot_spectrogram(waves, sampling_rate)
 
-    # ACF
-    plot_ACF(waves)
+# ACF
+plot_ACF(waves)
 
-    # PACF
-    plot_PACF(waves)
+# PACF
+plot_PACF(waves)
 
-Main()
+
 

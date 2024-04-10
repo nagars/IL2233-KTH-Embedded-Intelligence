@@ -45,17 +45,17 @@ def plot_EEG_visual(wave, title):
     plt.show()
 
 
-def plot_power_frequency(wave, sampling_rate, title):
+def plot_psd(wave, sampling_rate, xlim, title = 'Power Spectrum Density (PSD)'):
     
     fft_result = numpy.fft.rfft(wave.mean(0))
     freqs = numpy.fft.rfftfreq(len(wave.mean(0)), 1/sampling_rate)
     psd = numpy.abs(fft_result)**2
 
-    plt.xlim(0, 15)
+    plt.xlim(0, xlim)
     plt.plot(freqs, psd)
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Power')
-    plt.title('Power Spectrum Density (PSD)')
+    plt.title(title)
     plt.grid(True)
     plt.show()
 
@@ -68,17 +68,18 @@ t = data['t'][0]
 sampling_rate = 500
 
 # Visualise EEG data
-#plot_EEG_visual(EEGa, "EEGA - Trials vs time")
-#plot_EEG_visual(EEGa, "EEGB - Trials vs time")
+plot_EEG_visual(EEGa, "EEGa - Trials vs time")
+plot_EEG_visual(EEGa, "EEGb - Trials vs time")
 
 # ERP
-#plot_ERP(EEGa, "ERP A - Trial 1")
-#plot_ERP(EEGb, "ERP B - Trial 1")
+plot_ERP(EEGa, "ERP A - Trial 1")
+plot_ERP(EEGb, "ERP B - Trial 1")
 
 # ERP with confidence intervals
-#plot_ERP_confidence_intervals(EEGa, "ERP A w/ confidence intervals - Trial 1")
-#plot_ERP_confidence_intervals(EEGb, "ERP B w/ confidence intervals - Trial 1")
+plot_ERP_confidence_intervals(EEGa, "ERP A w/ confidence intervals - Trial 1")
+plot_ERP_confidence_intervals(EEGb, "ERP B w/ confidence intervals - Trial 1")
 
 # Power vs Frequency
-plot_power_frequency(EEGa, sampling_rate, "EEGa - Power vs Frequency")
+plot_psd(EEGa, sampling_rate, 15, "EEGa - Power vs Frequency")
+plot_psd(EEGb, sampling_rate, sampling_rate/2, "EEGb - Power vs Frequency")
 
