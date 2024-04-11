@@ -19,3 +19,7 @@ plot_acf(Series(array))
 plt.ylim(-1.2,1.2)
 plt.show()
 
+# Show data characteristics
+print('Mean: ', Series(array).mean())
+print('Variance: ', Series(array).var())
+print('Standard deviation: ', Series(array).std())

@@ -47,6 +47,7 @@ def plot_autocovariance(wave, lag=50):
     auto_cov = Series(acovf(wave, nlag = lag))
     auto_cov.index = wave.index[0:101]
     auto_cov.plot.line(title = "EEG - Auto-covariance plot")
+    plt.xlabel('Lag [s]')
     plt.show()
 
 def plot_power_spectrum_linear(wave, sampling_rate, title = "EEG - Power Spectrum Linear Scale"):
@@ -72,7 +73,7 @@ def plot_power_spectrum_db(wave, sampling_rate, title = "EEG - Power Spectrum Lo
 
     plt.plot(freqs, 10 * numpy.log10(psd))
     #plt.xlim(0, 100)
-    plt.ylim(-30,61)
+    plt.ylim(0,61)
     plt.xlabel('Frequency (Hz)')
     plt.ylabel('Power [dB]')
     plt.title(title)
