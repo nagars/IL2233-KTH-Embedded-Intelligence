@@ -21,7 +21,7 @@ from pandas import  Series
 
 def generate_sine_wave(freq, amplitude, duration, sampling_rate, noise_level):
 
-    num_samples = int(duration * sampling_rate)
+    num_samples = int(duration * sampling_rate) + 1
     time = numpy.linspace(0, duration, num_samples)
     noise = numpy.random.uniform(-noise_level, noise_level, num_samples)
     sine_wave = amplitude * numpy.sin(2 * numpy.pi * freq * time) + noise
@@ -79,14 +79,14 @@ def plot_PACF(wave, lag = 50):
 
     plot_pacf(wave.iloc[0:200], lags=lag, title='10Hz Partial Autocorrelation')
     plt.show()
-    plot_pacf(wave.iloc[200:400], lags=lag, title='20 Hz Partial Autocorrelation')
+    plot_pacf(wave.iloc[200:400], lags=lag, title='20Hz Partial Autocorrelation')
     plt.show()
 
 
 # Sine wave Parameters
 frequency = [10, 20, 30, 40, 50]  # Hz
 amplitude = 1.0
-duration = 1.0  # seconds
+duration = 1.0 - 0.005 # seconds
 sampling_rate = 200  # Hz
 noise = 0
 
@@ -98,11 +98,7 @@ wave.extend(generate_sine_wave(frequency[2], amplitude, duration, sampling_rate,
 wave.extend(generate_sine_wave(frequency[3], amplitude, duration, sampling_rate, noise))     # 40 Hz
 wave.extend(generate_sine_wave(frequency[4], amplitude, duration, sampling_rate, noise))     # 50 Hz
 wave = Series(wave)
-wave.index = numpy.linspace(0, 5, int(duration)*sampling_rate*5)
-
-print (wave.iloc[0:200])
-print (wave.iloc[200:400])
-
+wave.index = numpy.linspace(0, 5 - 0.005, sampling_rate*5)
 
 # Line Plots
 plot_wave(wave)
