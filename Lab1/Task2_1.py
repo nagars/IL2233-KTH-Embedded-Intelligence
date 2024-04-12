@@ -14,14 +14,13 @@ Task:
 import numpy
 import matplotlib.pyplot as plt
 import statsmodels.api as sm
-import array
 from statsmodels.graphics.tsaplots import plot_acf
 from statsmodels.graphics.tsaplots import plot_pacf
-from pandas import  Series
+from pandas import Series
 
 def generate_sine_wave(freq, amplitude, duration, sampling_rate, noise_level):
 
-    num_samples = int(duration * sampling_rate) + 1
+    num_samples = round(duration * sampling_rate) + 1
     time = numpy.linspace(0, duration, num_samples)
     noise = numpy.random.uniform(-noise_level, noise_level, num_samples)
     sine_wave = amplitude * numpy.sin(2 * numpy.pi * freq * time) + noise
@@ -29,8 +28,6 @@ def generate_sine_wave(freq, amplitude, duration, sampling_rate, noise_level):
 
 def plot_wave(wave, title = "Sine Wave", colour = None):
     wave.plot.line(title = title, figsize = (100,10))
-    #plot(wave, color=colour)
-    #plt.title(title)
     plt.xlabel('Time(s)')
     plt.ylabel('Amplitude')
     plt.grid(True)
@@ -46,7 +43,6 @@ def plot_power_spectrum_density(wave, sampling_rate = 200):
     plt.xlabel('Frequency [Hz]')
     plt.ylabel('Power [$\mu V^2$/Hz]')
     plt.grid(True)
-    #plt.legend(loc='upper right')
     plt.xlim(0, sampling_rate / 2) 
     plt.show()
 
@@ -67,7 +63,6 @@ def plot_spectrogram(wave, sampling_rate = 200):
     plt.colorbar(label='Power/Frequency (dB/Hz)')
     plt.show()
 
-
 def plot_ACF(wave, lag = 50):
 
     plot_acf(wave.iloc[0:200], lags=lag, title='10Hz Autocorrelation')
@@ -82,12 +77,11 @@ def plot_PACF(wave, lag = 50):
     plot_pacf(wave.iloc[200:400], lags=lag, title='20Hz Partial Autocorrelation')
     plt.show()
 
-
 # Sine wave Parameters
 frequency = [10, 20, 30, 40, 50]  # Hz
 amplitude = 1.0
-duration = 1.0 - 0.005 # seconds
 sampling_rate = 200  # Hz
+duration = 1.0 - 1/sampling_rate # seconds
 noise = 0
 
 # Generate sine waves and combine
@@ -98,7 +92,7 @@ wave.extend(generate_sine_wave(frequency[2], amplitude, duration, sampling_rate,
 wave.extend(generate_sine_wave(frequency[3], amplitude, duration, sampling_rate, noise))     # 40 Hz
 wave.extend(generate_sine_wave(frequency[4], amplitude, duration, sampling_rate, noise))     # 50 Hz
 wave = Series(wave)
-wave.index = numpy.linspace(0, 5 - 0.005, sampling_rate*5)
+wave.index = numpy.linspace(0, 5 - 1/sampling_rate, sampling_rate*5)
 
 # Line Plots
 plot_wave(wave)
@@ -114,6 +108,3 @@ plot_ACF(wave)
 
 # PACF
 plot_PACF(wave)
-
-
-
