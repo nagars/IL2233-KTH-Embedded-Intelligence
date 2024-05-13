@@ -43,11 +43,13 @@ int euclidean_distance(double* x, double* y, int m_features){
 
 void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features, double *data){
 
-	double centroids_prev[K][m_features] = {0};	// Stores previous values of centroids
+	double* centroids_prev = (double*)malloc(K * m_features * sizeof(double));// Stores previous values of centroids
 	int cluster_complete = 0;		// Set to one if no more clustering is possible
-	double centroids[K][m_features] = {0};		// Actual centroids
-	double centroid_datapoints[K] = {0};		// Tracks the number of data points assigned to each centroid
-	double centroid_sums[K][m_features] = {0};	// Tracks sum of all datapoints in centroid used to calculate mean
+
+	double* centroids = (double*)malloc(K * m_features * sizeof(double));// Actual centroids
+
+	double* centroid_datapoints = (double*)malloc(K * sizeof(double));// Tracks the number of data points assigned to each centroid
+	double* centroid_sums = (double*)malloc(K * m_features * sizeof(double)); // Tracks sum of all datapoints in centroid used to calculate mean
 
 	// Set assignments to 0
 	memset(assignment, 0, sizeof(int) * n_samples);
@@ -56,11 +58,11 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 	for(int n = 0; n < max_iter; n++){
 		// iterate through all samples
 		for(int sample = 0; sample < n_samples; sample++){
-			double min_distance = euclidean_distance(data, centroids[0], m_features);
+			double min_distance = euclidean_distance(data, centroids, m_features);
 			//iterate through all centroids
 			for(int centroid_num = 0; centroid_num < K; centroid_num++){
 				// Calculate minimum euclidean distance of all data points to all centroids
-				double distance = euclidean_distance(data + sample*m_features, centroids[centroid_num], m_features);
+				double distance = euclidean_distance(data + sample*m_features, centroids + centroid_num * m_features, m_features);
 				// assign sample to centroid with least distance
 				if(distance < min_distance){
 					min_distance = distance;
@@ -77,7 +79,7 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 		for(int sample = 0; sample < n_samples; sample++){
 			// Calculate sum of features for all datapoints in a specific centroid
 			for(int i = 0; i < m_features; i++){
-				centroid_sums[assignment[sample]][i] += data[sample*m_features + i];
+				centroid_sums[assignment[sample]*m_features + i] += data[sample*m_features + i];
 			}
 			// increment array tracking how many data points in each centroid
 			centroid_datapoints[assignment[sample]]++;
@@ -88,7 +90,7 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 		// iterate through all centroids
 		for(int n = 0; n < K; n++){
 			for(int i = 0; i < m_features; i++){
-				centroids[n][i] = centroid_sums[n][i]/centroid_datapoints[n];
+				centroids[n * m_features + i] = centroid_sums[n * m_features + i]/centroid_datapoints[n];
 			}
 		}
 
@@ -100,7 +102,7 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 			// iterate through features
 			for(int n = 0; n < m_features; n++){
 				// check if centroids match enough
-				if(fabs(centroids[i][n] - centroids_prev[i][n]) > threshold)
+				if(fabs(centroids[i * m_features + n] - centroids_prev[i * m_features + n]) > threshold)
 					cluster_complete = 0;
 			}
 		}
@@ -122,42 +124,7 @@ int main(void){
 
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
 
-	/*
-	}else if (input == 1){
-		//Iris
-		n_samples = 100;		//temp values
-		m_features = 100;
-
-		assignment = (int*)malloc(sizeof(int) * n_samples);
-		data = (double*)malloc(sizeof(double) * n_samples * m_features);
-
-		// Read data file
-		/**TO BE IMPLEMENTED**/
-
-	// Store in double array
-
-	// Randomly assign data points to assignments
-	/*
-	}else if(input == 2){
-		//BME
-		n_samples = 100;		//temp values
-		m_features = 100;
-
-		assignment = (int*)malloc(sizeof(int) * n_samples);
-		data = (double*)malloc(sizeof(double) * n_samples * m_features);
-
-		// Read data file
-		/**TO BE IMPLEMENTED**/
-
-	// Store in double array
-
-	// Randomly assign data point values
-	/*
-	}else {
-		return 0;
-	}
-	 */
-	//call k-means function
+		//call k-means function
 	kmeans(assignment, NUM_CENTROIDS, MAX_ITER, N_SAMPLES, M_FEATURES, data);
 
 	//print results
