@@ -10,15 +10,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <time.h>
 
 #define threshold 0.1	// Threshold below which centroids can be considered equal
 #define N_SAMPLES	10	// Rows
-#define M_FEATURES	3	// Columns
-#define NUM_CENTROIDS	3	// Number of centroids
+#define M_FEATURES	2//3	// Columns
+#define NUM_CENTROIDS	2	// Number of centroids
 #define MAX_ITER	100	// Maximum iterations
 
+
 // For testing algorithm only
-const double test_data[] =		//data is formatted as feature1, 2, 3
+/*const double test_data[] =		//data is formatted as feature1, 2, 3
 {8.3,9.5,1.1,
 		1.2,11.9,10.1,
 		8.3,1.6,10.1,
@@ -31,6 +33,8 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 		10.9,9.2,0.1};
 // End result should be 3 clusters (High feature 1,2 and low feature 3), (Low feature 1 and high 2,3),
 //(low feature 2, high 1,3)
+*/
+double test_data[20] = {1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 9, 9, 10, 10};
 
 int euclidean_distance(double* x, double* y, int m_features){
 
@@ -41,20 +45,37 @@ int euclidean_distance(double* x, double* y, int m_features){
 	return sqrt(sum);
 }
 
+int random_number(int min, int max) {
+    srand(time(NULL));
+    return (rand() % (max - min + 1)) + min;
+}
+
+
 void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features, double *data){
 
-	double* centroids_prev = (double*)malloc(K * m_features * sizeof(double));// Stores previous values of centroids
-	int cluster_complete = 0;		// Set to one if no more clustering is possible
-
 	double* centroids = (double*)malloc(K * m_features * sizeof(double));// Actual centroids
-
+	//double centroids[K][m_features]
 	double* centroid_datapoints = (double*)malloc(K * sizeof(double));// Tracks the number of data points assigned to each centroid
 	double* centroid_sums = (double*)malloc(K * m_features * sizeof(double)); // Tracks sum of all datapoints in centroid used to calculate mean
+	//double centroid_sum[K][m_features]
+
+	memset(centroids, 0, K * m_features * sizeof(double));
+	memset(centroid_datapoints, 0, K * sizeof(double));
+	memset(centroid_sums, 0, K * m_features * sizeof(double));
 
 	// Set assignments to 0
 	memset(assignment, 0, sizeof(int) * n_samples);
 
-	// Iterate for max_iterations or until centroids stop moving
+	// Initalise centroids with random data points
+	for(int i = 0; i < K; i++){
+		int random_index = random_number(0, n_samples - 1);
+		//memcpy(centroids + i*m_features,  data + random_index * m_features, m_features);
+		centroids[i*m_features] = data[random_index * m_features];
+		centroids[i*m_features + 1] = data[random_index * m_features + 1];
+	}
+
+
+	// Iterate for max_iterations
 	for(int n = 0; n < max_iter; n++){
 		// iterate through all samples
 		for(int sample = 0; sample < n_samples; sample++){
@@ -70,10 +91,6 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 				}
 			}
 		}
-
-		// Clear centroids array
-		memset(centroid_sums, 0, sizeof(double)*K*m_features);
-		memset(centroid_datapoints, 0, sizeof(int)*K);
 
 		// iterate through all samples
 		for(int sample = 0; sample < n_samples; sample++){
@@ -94,25 +111,18 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 			}
 		}
 
-		// Check if clustering is complete by confirming if clusters
-		// are still moving or not
-		cluster_complete = 1;
-		// iterate through centroids
-		for(int i = 0; i < K; i++){
-			// iterate through features
-			for(int n = 0; n < m_features; n++){
-				// check if centroids match enough
-				if(fabs(centroids[i * m_features + n] - centroids_prev[i * m_features + n]) > threshold)
-					cluster_complete = 0;
-			}
-		}
-		// Centroids did not move. CLustering complete
-		if (cluster_complete == 1)
-			return;
+		// Clear centroids array
+		memset(centroid_sums, 0, sizeof(double)*K*m_features);
+		memset(centroid_datapoints, 0, sizeof(int)*K);
 
-		// Update centroid_prev
-		memcpy(centroids_prev, centroids, sizeof(double)*K*m_features);
+
 	}
+
+	free(centroids);
+	free(centroid_datapoints);
+	free(centroid_sums);
+
+	return;
 }
 
 int main(void){
@@ -124,12 +134,12 @@ int main(void){
 
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
 
-		//call k-means function
+	//call k-means function
 	kmeans(assignment, NUM_CENTROIDS, MAX_ITER, N_SAMPLES, M_FEATURES, data);
 
 	//print results
 	for(int n = 0; n < N_SAMPLES; n++){
-		printf("%d \t sample assigned to %d\n", n, assignment[n]);
+		printf("%d\t sample assigned to centroid %d\n", n, assignment[n]);
 	}
 
 	return 1;
