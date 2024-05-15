@@ -16,7 +16,7 @@
 #include <float.h>
 
 #define N_SAMPLES	10	// Rows
-#define M_FEATURES	2//3	// Columns	// Dimensions of grid weights
+#define M_FEATURES	3	// Columns	// Dimensions of grid weights
 #define SOM_HEIGHT		2	// Output grid height
 #define SOM_WIDTH		2	// Output grid width
 #define LEARNING_RATE	0.1	// Learning rate
@@ -25,23 +25,19 @@
 
 
 // For testing algorithm only
-/*const double test_data[] =		//data is formatted as feature1, 2, 3
-{12.3,14.5,1.1,
-		1.2,13.9,12.1,
-		14.3,0.6,13.1,
-		9.5,10.9,0.1,
-		2.3,9.9,11,
-		10.1,0.8,10.2,
-		13.6,14.8,1,
-		2.1,10.9,11,
-		14.6,2.1,15.7,
-		13.9,14.2,0.1};
-*/
-// End result should be 3 clusters (High feature 1,2 and low feature 3), (Low feature 1 and high 2,3),
-//(low feature 2, high 1,3)
-
-double test_data[20] = {1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 9, 9, 10, 10};
-// The result should be [(0, 0), (0, 0), (0, 0), (0, 0), (0, 0), (1, 1), (1, 1), (1, 1), (1, 1), (1, 1)]
+const double test_data[] =		//data is formatted as feature1, 2, 3
+{30.3,30.5,30.1,
+		30,30.9,30.1,
+		30.6,30,30.1,
+		30.9,30.2,30.1,
+		15.2,15.9,15.1,
+		15.3,15.9,15,
+		15.1,15.5,15.1,
+		45.3,45.6,45.1,
+		45.1,45.8,45.2,
+		45.6,45.1,45.7,
+		};
+//Neurons should match around 15, 30 and 45
 
 // Data structure to represent a neuron
 typedef struct Neuron {
@@ -139,8 +135,19 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 			}
 		}
 	}
-}
+	// iterate through grid
+	printf("Neuron weights: ");
+	for(int row = 0; row < height; row++){
+		for(int col = 0; col < width; col++){
+			printf("\nNeuron (%d,%d): ",row, col);
+			for(int weight = 0; weight < m_features; weight++){
+				printf("%f ",grid.neurons[row][col].weights[weight]);
+			}
 
+		}
+	}
+	printf("\n");
+}
 
 int main(void){
 
