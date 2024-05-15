@@ -1,0 +1,6 @@
+Instructions:
+
+1. GCC make statements to be executed in each c codes folder (cd to code folder)
+2. To compile with test data: gcc -o main main.c data.h -lm
+3. To compile with IRIS data: gcc -o main main.c data.h -lm -DIRIS_DATA=1
+4. To compile with BME data: gcc -o main main.c data.h -lm -DBME_DATA=1

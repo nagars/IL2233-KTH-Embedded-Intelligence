@@ -11,12 +11,27 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include "data.h"
+
+// IRIS data set to be used
+#ifdef IRIS_DATA
+
+#define N_SAMPLES	150	// Rows
+#define M_FEATURES	4	// Columns	// Dimensions of grid weights
+#define NUM_CENTROIDS	3	// Number of centroids
+
+// BME data set to be used
+#elif BME_DATA
+
+#define N_SAMPLES	180	// Rows
+#define M_FEATURES	128	// Columns	// Dimensions of grid weights
+#define NUM_CENTROIDS	3	// Number of centroids
+
+#else
 
 #define N_SAMPLES	10	// Rows
 #define M_FEATURES	3	// Columns
 #define NUM_CENTROIDS	3	// Number of centroids
-#define MAX_ITER	1000	// Maximum iterations
-
 
 // For testing algorithm only
 const double test_data[] =		//data is formatted as feature1, 2, 3
@@ -33,7 +48,10 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 // End result should be 3 clusters (High feature 1,2 and low feature 3), (Low feature 1 and high 2,3),
 //(low feature 2, high 1,3)
 
-//double test_data[20] = {1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 7, 7, 7, 7, 8, 8, 9, 9, 10, 10};
+#endif
+
+#define MAX_ITER	1000	// Maximum iterations
+
 
 double euclidean_distance(double* x, double* y, int m_features){
 
@@ -134,14 +152,21 @@ int main(void){
 	double data[N_SAMPLES * M_FEATURES] = {0};			// Input from file
 	// Of the form: sample0_feature0, sample0_feature1,... samplen_feature0, samplen_feature1...
 
+	// Copy correct dataset to data array
+#ifdef IRIS_DATA
+	memcpy(data, IRIS, sizeof(IRIS));
+#elif BME_DATA
+	memcpy(data, BME, sizeof(BME));
+#else
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
-
+#endif
 	//call k-means function
 	kmeans(assignment, NUM_CENTROIDS, MAX_ITER, N_SAMPLES, M_FEATURES, data);
 
 	//print results
 	for(int n = 0; n < N_SAMPLES; n++){
-		printf("%d\t sample assigned to centroid %d\n", n, assignment[n]);
+		//printf("%d\t sample assigned to centroid %d\n", n, assignment[n]);
+		printf("%d\n", assignment[n]);
 	}
 
 	return 1;

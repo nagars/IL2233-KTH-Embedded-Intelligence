@@ -15,14 +15,31 @@
 #include <time.h>
 #include <float.h>
 
+// Data sets found in data.h
+#include "data.h"
+
+// IRIS data set to be used
+#ifdef IRIS_DATA
+
+#define N_SAMPLES	150	// Rows
+#define M_FEATURES	4	// Columns	// Dimensions of grid weights
+#define SOM_HEIGHT		8	// Output grid height
+#define SOM_WIDTH		8	// Output grid width
+
+// BME data set to be used
+#elif BME_DATA
+
+#define N_SAMPLES	180	// Rows
+#define M_FEATURES	128	// Columns	// Dimensions of grid weights
+#define SOM_HEIGHT		8	// Output grid height
+#define SOM_WIDTH		8	// Output grid width
+
+#else
+
 #define N_SAMPLES	10	// Rows
 #define M_FEATURES	3	// Columns	// Dimensions of grid weights
 #define SOM_HEIGHT		2	// Output grid height
 #define SOM_WIDTH		2	// Output grid width
-#define LEARNING_RATE	0.1	// Learning rate
-#define WEIGHT_UPDATE_RATE	fmax(SOM_HEIGHT,SOM_WIDTH)/2.0	// Weight update rate
-#define MAX_ITER	1000	// Maximum iterations
-
 
 // For testing algorithm only
 const double test_data[] =		//data is formatted as feature1, 2, 3
@@ -38,6 +55,13 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 		45.6,45.1,45.7,
 		};
 //Neurons should match around 15, 30 and 45
+
+#endif
+
+#define LEARNING_RATE	0.1	// Learning rate
+#define WEIGHT_UPDATE_RATE	fmax(SOM_HEIGHT,SOM_WIDTH)/2.0	// Weight update rate
+#define MAX_ITER	1000	// Maximum iterations
+
 
 // Data structure to represent a neuron
 typedef struct Neuron {
@@ -73,6 +97,8 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 
 	// Initialise 2D grid along with weights of neurons with random values
 	som_grid grid;
+	memset(&grid, 0, sizeof(grid));
+
 	for(int row = 0; row < height; row++){
 		for(int col = 0; col < width; col++){
 			for(int weight = 0; weight < m_features; weight++)
@@ -92,7 +118,9 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 			// iterate through all samples
 			for(int sample = 0; sample < n_samples; sample++){
 				// Pick random min distance
-				double min_distance = DBL_MAX;
+				//double min_distance = DBL_MAX;
+				double min_distance = euclidean_distance(&data[sample*m_features],
+								&grid.neurons[0][0].weights[0], m_features);
 				// traverse grid of neurons
 				for(int row = 0; row < height; row++){
 					for(int col = 0; col < width; col++){
@@ -128,7 +156,7 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 						// Update current neuron weights
 						for(int weight = 0; weight < m_features; weight++)
 							grid.neurons[row][col].weights[weight] += learning_rate_curr * update_distribution *
-							(data[sample * m_features] - grid.neurons[row][col].weights[weight]);
+							(data[sample * m_features + weight] - grid.neurons[row][col].weights[weight]);
 
 					}
 				}
@@ -156,8 +184,14 @@ int main(void){
 	double data[N_SAMPLES * M_FEATURES] = {0};			// Input from file
 	// Of the form: sample0_feature0, sample0_feature1,... samplen_feature0, samplen_feature1...
 
+	// Copy correct dataset to data array
+#ifdef IRIS_DATA
+	memcpy(data, IRIS, sizeof(IRIS));
+#elif BME_DATA
+	memcpy(data, BME, sizeof(BME));
+#else
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
-
+#endif
 	//call SOM function
 	SOM(assignment, data, N_SAMPLES, M_FEATURES, SOM_HEIGHT, SOM_WIDTH, MAX_ITER, LEARNING_RATE, WEIGHT_UPDATE_RATE);
 

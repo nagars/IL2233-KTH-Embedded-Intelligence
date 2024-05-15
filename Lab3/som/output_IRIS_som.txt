@@ -1,0 +1,215 @@
+Neuron weights: 
+Neuron (0,0): 5.838634 2.528614 4.705120 1.617149 
+Neuron (0,1): 5.743263 2.532499 4.472727 1.480477 
+Neuron (0,2): 5.619821 2.551475 4.202643 1.342475 
+Neuron (0,3): 5.512515 2.581588 3.931246 1.225083 
+Neuron (0,4): 5.389338 2.666631 3.507588 1.057565 
+Neuron (0,5): 5.185610 2.890544 2.696758 0.734954 
+Neuron (0,6): 5.001061 3.125026 1.928770 0.426975 
+Neuron (0,7): 4.918057 3.238342 1.575338 0.284644 
+Neuron (1,0): 5.904832 2.601522 4.872674 1.702498 
+Neuron (1,1): 5.832976 2.611993 4.662656 1.576342 
+Neuron (1,2): 5.718582 2.636491 4.374928 1.422835 
+Neuron (1,3): 5.611804 2.672880 4.084097 1.289227 
+Neuron (1,4): 5.496731 2.760388 3.663941 1.120045 
+Neuron (1,5): 5.304232 2.982634 2.844741 0.796394 
+Neuron (1,6): 5.117068 3.222676 2.027523 0.471915 
+Neuron (1,7): 5.025508 3.343658 1.630014 0.313144 
+Neuron (2,0): 6.011545 2.671909 5.032806 1.761265 
+Neuron (2,1): 5.962009 2.698938 4.865707 1.663325 
+Neuron (2,2): 5.864973 2.740936 4.598195 1.523362 
+Neuron (2,3): 5.762797 2.789798 4.307839 1.388610 
+Neuron (2,4): 5.655918 2.877478 3.902563 1.221839 
+Neuron (2,5): 5.474945 3.087539 3.087695 0.898227 
+Neuron (2,6): 5.277318 3.327958 2.201010 0.546300 
+Neuron (2,7): 5.167343 3.455803 1.735018 0.360496 
+Neuron (3,0): 6.164216 2.737963 5.194820 1.805193 
+Neuron (3,1): 6.121520 2.780915 5.060054 1.738879 
+Neuron (3,2): 6.038283 2.840907 4.832692 1.635864 
+Neuron (3,3): 5.945021 2.897744 4.569888 1.522248 
+Neuron (3,4): 5.854027 2.970346 4.218813 1.373703 
+Neuron (3,5): 5.708610 3.136437 3.511962 1.082319 
+Neuron (3,6): 5.514603 3.361431 2.602256 0.712276 
+Neuron (3,7): 5.374376 3.506529 2.020877 0.477259 
+Neuron (4,0): 6.407807 2.824238 5.412057 1.865432 
+Neuron (4,1): 6.343961 2.873908 5.285918 1.832769 
+Neuron (4,2): 6.246695 2.936594 5.085080 1.775213 
+Neuron (4,3): 6.148222 2.985488 4.849078 1.692001 
+Neuron (4,4): 6.072094 3.028947 4.562015 1.566391 
+Neuron (4,5): 5.992866 3.117979 4.071452 1.340246 
+Neuron (4,6): 5.877172 3.267060 3.372699 1.028025 
+Neuron (4,7): 5.754267 3.402890 2.788299 0.776854 
+Neuron (5,0): 6.759317 2.948334 5.704410 1.953645 
+Neuron (5,1): 6.640929 2.990043 5.564814 1.957974 
+Neuron (5,2): 6.493412 3.036936 5.366627 1.947429 
+Neuron (5,3): 6.369735 3.065620 5.143163 1.896720 
+Neuron (5,4): 6.296241 3.076716 4.891964 1.785182 
+Neuron (5,5): 6.268942 3.090153 4.568036 1.596583 
+Neuron (5,6): 6.265569 3.122474 4.199309 1.373410 
+Neuron (5,7): 6.255213 3.168769 3.899238 1.204443 
+Neuron (6,0): 7.066158 3.059236 5.956101 2.036392 
+Neuron (6,1): 6.892682 3.087387 5.797016 2.068448 
+Neuron (6,2): 6.692890 3.115865 5.589612 2.093802 
+Neuron (6,3): 6.546283 3.126687 5.373835 2.073966 
+Neuron (6,4): 6.473220 3.114854 5.140939 1.975282 
+Neuron (6,5): 6.464601 3.085606 4.870737 1.781299 
+Neuron (6,6): 6.501052 3.056026 4.628391 1.565428 
+Neuron (6,7): 6.541191 3.045163 4.486504 1.430516 
+Neuron (7,0): 7.231189 3.117832 6.099943 2.089800 
+Neuron (7,1): 7.031647 3.138801 5.931993 2.134420 
+Neuron (7,2): 6.802994 3.157903 5.715795 2.177817 
+Neuron (7,3): 6.643558 3.159228 5.500779 2.177736 
+Neuron (7,4): 6.574012 3.136361 5.278576 2.092236 
+Neuron (7,5): 6.574581 3.091428 5.020101 1.887481 
+Neuron (7,6): 6.615564 3.045077 4.791706 1.646370 
+Neuron (7,7): 6.654484 3.021670 4.670995 1.501821 
+0	 sample assigned (1,7)
+1	 sample assigned (0,7)
+2	 sample assigned (0,7)
+3	 sample assigned (0,7)
+4	 sample assigned (1,7)
+5	 sample assigned (2,7)
+6	 sample assigned (0,7)
+7	 sample assigned (1,7)
+8	 sample assigned (0,7)
+9	 sample assigned (0,7)
+10	 sample assigned (2,7)
+11	 sample assigned (0,7)
+12	 sample assigned (0,7)
+13	 sample assigned (0,7)
+14	 sample assigned (2,7)
+15	 sample assigned (3,7)
+16	 sample assigned (2,7)
+17	 sample assigned (1,7)
+18	 sample assigned (3,7)
+19	 sample assigned (2,7)
+20	 sample assigned (2,7)
+21	 sample assigned (2,7)
+22	 sample assigned (0,7)
+23	 sample assigned (1,7)
+24	 sample assigned (1,7)
+25	 sample assigned (0,7)
+26	 sample assigned (1,7)
+27	 sample assigned (2,7)
+28	 sample assigned (1,7)
+29	 sample assigned (0,7)
+30	 sample assigned (0,7)
+31	 sample assigned (2,7)
+32	 sample assigned (2,7)
+33	 sample assigned (2,7)
+34	 sample assigned (0,7)
+35	 sample assigned (0,7)
+36	 sample assigned (2,7)
+37	 sample assigned (0,7)
+38	 sample assigned (0,7)
+39	 sample assigned (1,7)
+40	 sample assigned (1,7)
+41	 sample assigned (0,7)
+42	 sample assigned (0,7)
+43	 sample assigned (2,7)
+44	 sample assigned (2,7)
+45	 sample assigned (0,7)
+46	 sample assigned (2,7)
+47	 sample assigned (0,7)
+48	 sample assigned (2,7)
+49	 sample assigned (0,7)
+50	 sample assigned (7,7)
+51	 sample assigned (5,5)
+52	 sample assigned (7,6)
+53	 sample assigned (0,3)
+54	 sample assigned (6,6)
+55	 sample assigned (2,3)
+56	 sample assigned (5,5)
+57	 sample assigned (0,4)
+58	 sample assigned (6,7)
+59	 sample assigned (0,3)
+60	 sample assigned (0,4)
+61	 sample assigned (3,4)
+62	 sample assigned (0,2)
+63	 sample assigned (3,3)
+64	 sample assigned (1,4)
+65	 sample assigned (6,7)
+66	 sample assigned (2,3)
+67	 sample assigned (1,3)
+68	 sample assigned (0,1)
+69	 sample assigned (0,3)
+70	 sample assigned (4,3)
+71	 sample assigned (4,5)
+72	 sample assigned (2,1)
+73	 sample assigned (3,3)
+74	 sample assigned (5,6)
+75	 sample assigned (6,7)
+76	 sample assigned (7,7)
+77	 sample assigned (7,6)
+78	 sample assigned (3,3)
+79	 sample assigned (0,4)
+80	 sample assigned (0,3)
+81	 sample assigned (0,4)
+82	 sample assigned (2,4)
+83	 sample assigned (2,0)
+84	 sample assigned (2,3)
+85	 sample assigned (4,4)
+86	 sample assigned (7,7)
+87	 sample assigned (0,1)
+88	 sample assigned (2,4)
+89	 sample assigned (0,3)
+90	 sample assigned (0,2)
+91	 sample assigned (4,4)
+92	 sample assigned (1,3)
+93	 sample assigned (0,4)
+94	 sample assigned (1,3)
+95	 sample assigned (3,4)
+96	 sample assigned (3,4)
+97	 sample assigned (5,6)
+98	 sample assigned (0,4)
+99	 sample assigned (1,3)
+100	 sample assigned (7,2)
+101	 sample assigned (2,0)
+102	 sample assigned (6,0)
+103	 sample assigned (4,0)
+104	 sample assigned (6,2)
+105	 sample assigned (7,0)
+106	 sample assigned (0,2)
+107	 sample assigned (7,0)
+108	 sample assigned (5,0)
+109	 sample assigned (7,0)
+110	 sample assigned (6,4)
+111	 sample assigned (4,0)
+112	 sample assigned (6,2)
+113	 sample assigned (1,0)
+114	 sample assigned (2,0)
+115	 sample assigned (7,4)
+116	 sample assigned (5,2)
+117	 sample assigned (7,0)
+118	 sample assigned (7,0)
+119	 sample assigned (1,0)
+120	 sample assigned (7,2)
+121	 sample assigned (1,0)
+122	 sample assigned (7,0)
+123	 sample assigned (3,1)
+124	 sample assigned (7,2)
+125	 sample assigned (6,0)
+126	 sample assigned (4,3)
+127	 sample assigned (4,3)
+128	 sample assigned (4,0)
+129	 sample assigned (6,0)
+130	 sample assigned (7,0)
+131	 sample assigned (7,0)
+132	 sample assigned (4,0)
+133	 sample assigned (3,1)
+134	 sample assigned (3,0)
+135	 sample assigned (7,0)
+136	 sample assigned (7,3)
+137	 sample assigned (5,2)
+138	 sample assigned (4,3)
+139	 sample assigned (6,2)
+140	 sample assigned (7,3)
+141	 sample assigned (7,4)
+142	 sample assigned (2,0)
+143	 sample assigned (7,2)
+144	 sample assigned (7,2)
+145	 sample assigned (7,4)
+146	 sample assigned (3,0)
+147	 sample assigned (6,4)
+148	 sample assigned (6,3)
+149	 sample assigned (3,1)
