@@ -14,6 +14,7 @@
 #include <math.h>
 #include <time.h>
 #include <float.h>
+#include <sys/time.h>
 
 // Data sets found in data.h
 #include "data.h"
@@ -53,7 +54,7 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 		45.3,45.6,45.1,
 		45.1,45.8,45.2,
 		45.6,45.1,45.7,
-		};
+};
 //Neurons should match around 15, 30 and 45
 
 #endif
@@ -62,6 +63,10 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 #define WEIGHT_UPDATE_RATE	fmax(SOM_HEIGHT,SOM_WIDTH)/2.0	// Weight update rate
 #define MAX_ITER	1000	// Maximum iterations
 
+// Data structure for measuring execution time
+typedef struct T_MEASURE {
+	struct timeval start, end;
+}t_measure;
 
 // Data structure to represent a neuron
 typedef struct Neuron {
@@ -74,10 +79,30 @@ typedef struct SOM {
 } som_grid;
 
 // Position of neurons in grid
-typedef struct {
+typedef struct T_POS {
 	int x;
 	int y;
 } t_pos;
+
+// Starts measuring time
+void init_exec_time(t_measure* time){
+
+	gettimeofday(&(time->start), NULL);
+}
+
+// Stops measuring time. Returns difference.
+double conclude_exec_time(t_measure* time){
+
+	gettimeofday(&(time->end), NULL);
+
+	struct timeval start = time->start;
+	struct timeval end = time->end;
+	long seconds  = end.tv_sec  - start.tv_sec;
+    long useconds = end.tv_usec - start.tv_usec;
+
+    return (double)(seconds + useconds/1000000.0);
+}
+
 
 double euclidean_distance(double* x, double* y, int m_features){
 
@@ -120,7 +145,7 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 				// Pick random min distance
 				//double min_distance = DBL_MAX;
 				double min_distance = euclidean_distance(&data[sample*m_features],
-								&grid.neurons[0][0].weights[0], m_features);
+						&grid.neurons[0][0].weights[0], m_features);
 				// traverse grid of neurons
 				for(int row = 0; row < height; row++){
 					for(int col = 0; col < width; col++){
@@ -164,7 +189,7 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 		}
 	}
 	// iterate through grid
-	printf("Neuron weights: ");
+	/*printf("Neuron weights: ");
 	for(int row = 0; row < height; row++){
 		for(int col = 0; col < width; col++){
 			printf("\nNeuron (%d,%d): ",row, col);
@@ -174,12 +199,15 @@ void SOM(t_pos *assignment, double *data, int n_samples, int m_features, int hei
 
 		}
 	}
-	printf("\n");
+	printf("\n");*/
 }
 
 int main(void){
 
-	// Initialize assignment values with 0 for test
+	// Initialize struct for time measurement
+	t_measure exec_time;
+
+	// Initialize assignment values with 0
 	t_pos assignment[N_SAMPLES] = {0};		// Which cluster its assigned to
 	double data[N_SAMPLES * M_FEATURES] = {0};			// Input from file
 	// Of the form: sample0_feature0, sample0_feature1,... samplen_feature0, samplen_feature1...
@@ -192,12 +220,19 @@ int main(void){
 #else
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
 #endif
+
+	// Begin timing
+	init_exec_time(&exec_time);
 	//call SOM function
 	SOM(assignment, data, N_SAMPLES, M_FEATURES, SOM_HEIGHT, SOM_WIDTH, MAX_ITER, LEARNING_RATE, WEIGHT_UPDATE_RATE);
+	// End timing
+	double time_elapsed = conclude_exec_time(&exec_time);
+	printf("Time elapsed: %lf sec\n", time_elapsed);
 
 	//print results
 	for(int n = 0; n < N_SAMPLES; n++){
-		printf("%d\t sample assigned (%d,%d)\n", n, assignment[n].x, assignment[n].y);
+		//printf("%d\t sample assigned (%d,%d)\n", n, assignment[n].x, assignment[n].y);
+		printf("%d,%d\n", assignment[n].x, assignment[n].y);
 	}
 
 

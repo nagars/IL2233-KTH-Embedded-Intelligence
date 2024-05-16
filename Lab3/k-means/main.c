@@ -11,6 +11,8 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <sys/time.h>
+
 #include "data.h"
 
 // IRIS data set to be used
@@ -52,6 +54,31 @@ const double test_data[] =		//data is formatted as feature1, 2, 3
 
 #define MAX_ITER	1000	// Maximum iterations
 
+// Data structure for measuring execution time
+typedef struct T_MEASURE {
+	struct timeval start, end;
+}t_measure;
+
+
+// Starts measuring time
+void init_exec_time(t_measure* time){
+
+	gettimeofday(&(time->start), NULL);
+}
+
+// Stops measuring time. Returns difference.
+double conclude_exec_time(t_measure* time){
+
+	gettimeofday(&(time->end), NULL);
+
+	struct timeval start = time->start;
+	struct timeval end = time->end;
+	long seconds  = end.tv_sec  - start.tv_sec;
+	long useconds = end.tv_usec - start.tv_usec;
+
+	return (double)(seconds + useconds/1000000.0);
+}
+
 
 double euclidean_distance(double* x, double* y, int m_features){
 
@@ -65,7 +92,7 @@ double euclidean_distance(double* x, double* y, int m_features){
 int random_number(int min, int max) {
 	//time_t t;
 	//srand((unsigned)time(&t));
-    return (rand() % (max - min + 1)) + min;
+	return (rand() % (max - min + 1)) + min;
 }
 
 
@@ -147,6 +174,10 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 
 int main(void){
 
+	// Initialize struct for time measurement
+	t_measure exec_time;
+
+
 	// Initialize assignment values with 0 for test
 	int assignment[N_SAMPLES] = {0};		// Which cluster its assigned to
 	double data[N_SAMPLES * M_FEATURES] = {0};			// Input from file
@@ -160,8 +191,14 @@ int main(void){
 #else
 	memcpy(data, test_data, sizeof(test_data));		// Copy test data from constant array
 #endif
+
+	// Begin timing
+	init_exec_time(&exec_time);
 	//call k-means function
 	kmeans(assignment, NUM_CENTROIDS, MAX_ITER, N_SAMPLES, M_FEATURES, data);
+	// End timing
+	double time_elapsed = conclude_exec_time(&exec_time);
+	printf("Time elapsed: %lf sec\n", time_elapsed);
 
 	//print results
 	for(int n = 0; n < N_SAMPLES; n++){
