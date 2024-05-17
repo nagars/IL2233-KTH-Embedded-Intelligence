@@ -19,21 +19,22 @@
 // Data sets found in data.h
 #include "data.h"
 
+
 // IRIS data set to be used
 #ifdef IRIS_DATA
 
 #define N_SAMPLES	150	// Rows
 #define M_FEATURES	4	// Columns	// Dimensions of grid weights
-#define SOM_HEIGHT		8	// Output grid height
-#define SOM_WIDTH		8	// Output grid width
+#define SOM_HEIGHT		10	// Output grid height
+#define SOM_WIDTH		10	// Output grid width
 
 // BME data set to be used
 #elif BME_DATA
 
 #define N_SAMPLES	180	// Rows
 #define M_FEATURES	128	// Columns	// Dimensions of grid weights
-#define SOM_HEIGHT		8	// Output grid height
-#define SOM_WIDTH		8	// Output grid width
+#define SOM_HEIGHT		2//10	// Output grid height
+#define SOM_WIDTH		3//10	// Output grid width
 
 #else
 
@@ -43,7 +44,7 @@
 #define SOM_WIDTH		2	// Output grid width
 
 // For testing algorithm only
-const double test_data[] =		//data is formatted as feature1, 2, 3
+const double test_data[] =		//data is formatted as feature 1, 2, 3
 {30.3,30.5,30.1,
 		30,30.9,30.1,
 		30.6,30,30.1,

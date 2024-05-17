@@ -15,6 +15,7 @@
 
 #include "data.h"
 
+
 // IRIS data set to be used
 #ifdef IRIS_DATA
 
@@ -123,13 +124,19 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 
 	// Iterate for max_iterations
 	for(int n = 0; n < max_iter; n++){
+
+		// Clear centroids array
+		memset(centroid_sums, 0, sizeof(double)*K*m_features);
+		memset(centroid_datapoints, 0, sizeof(int)*K);
+
 		// iterate through all samples
 		for(int sample = 0; sample < n_samples; sample++){
 			double min_distance = euclidean_distance(&data[sample*m_features], centroids, m_features);
 			//iterate through all centroids
 			for(int centroid_num = 0; centroid_num < K; centroid_num++){
 				// Calculate minimum euclidean distance of all data points to all centroids
-				double distance = euclidean_distance(&data[sample*m_features], &centroids[centroid_num * m_features], m_features);
+				double distance = euclidean_distance(&data[sample*m_features],
+						&centroids[centroid_num * m_features], m_features);
 				// assign sample to centroid with least distance
 				if(distance < min_distance){
 					min_distance = distance;
@@ -158,11 +165,13 @@ void kmeans(int *assignment, int K, int max_iter, int n_samples, int m_features,
 			}
 		}
 
-		// Clear centroids array
-		memset(centroid_sums, 0, sizeof(double)*K*m_features);
-		memset(centroid_datapoints, 0, sizeof(int)*K);
 
+	}
 
+	// print first two centroid features values
+	for(int centroid_num = 0; centroid_num < K; centroid_num++){
+			printf("Centroid %d: %lf,%lf\n", centroid_num, centroids[centroid_num*m_features],
+					centroids[centroid_num*m_features + 1]);
 	}
 
 	free(centroids);
@@ -201,6 +210,7 @@ int main(void){
 	printf("Time elapsed: %lf sec\n", time_elapsed);
 
 	//print results
+	printf("Sample classifications:\n");
 	for(int n = 0; n < N_SAMPLES; n++){
 		//printf("%d\t sample assigned to centroid %d\n", n, assignment[n]);
 		printf("%d\n", assignment[n]);
