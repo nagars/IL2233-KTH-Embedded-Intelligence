@@ -11,3 +11,7 @@ Python Scripts:
 2. calculateRandForKmeansFromC.ipynb: Takes results produced by c code for Kmeans as a text file and calculates RAND indexes.
 3. calculateRandForSOMFromC.ipynb: Takes results procuded by c code for SOM as a text file and calculates RAND indexes.
 4. dataToCHead.ipyb: Converts the dataset text files to an array that can be included in the c code as a data.h file
+
+C code:
+1. k-means: Prints which centroid each data sample is assigned to
+2. Som: Prints the x,y coordinates of each neuron on the grid
